@@ -1,0 +1,82 @@
+name: Android APK Cloud Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/chat_app/**"
+      - ".github/workflows/android-apk.yml"
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: "Backend HTTP Base URL (e.g. https://private-chat-backend.onrender.com)"
+        required: false
+        default: ""
+      ws_base_url:
+        description: "Backend WebSocket Base URL (e.g. wss://private-chat-backend.onrender.com/ws)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/chat_app
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:"
+
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+
+      - name: Verify Dart Code Formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze Flutter Code
+        run: flutter analyze
+
+      - name: Run Flutter Tests
+        run: flutter test
+
+      - name: Build Android Release APK
+        env:
+          INPUT_API_URL: ${{ inputs.api_base_url }}
+          INPUT_WS_URL: ${{ inputs.ws_base_url }}
+        run: |
+          BUILD_ARGS="--release"
+          if [ -n "$INPUT_API_URL" ]; then
+            BUILD_ARGS="$BUILD_ARGS --dart-define=API_BASE_URL=$INPUT_API_URL"
+          fi
+          if [ -n "$INPUT_WS_URL" ]; then
+            BUILD_ARGS="$BUILD_ARGS --dart-define=WS_BASE_URL=$INPUT_WS_URL"
+          fi
+          echo "Building APK with args: $BUILD_ARGS"
+          flutter build apk $BUILD_ARGS
+
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: private-chat-android-apk
+          path: apps/chat_app/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
