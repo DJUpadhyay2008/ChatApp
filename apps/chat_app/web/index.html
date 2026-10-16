@@ -52,18 +52,6 @@
     <div class="spinner"></div>
     <div style="font-size: 14px; opacity: 0.8;">Loading Private Chat...</div>
   </div>
-  <script src="flutter.js" defer></script>
-  <script>
-    window.addEventListener('load', function(ev) {
-      _flutter.loader.load({
-        onEntrypointLoaded: async function(engineInitializer) {
-          const appRunner = await engineInitializer.initializeEngine();
-          const loadingEl = document.getElementById('loading');
-          if (loadingEl) loadingEl.remove();
-          await appRunner.runApp();
-        }
-      });
-    });
-  </script>
+  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

@@ -22,7 +22,12 @@ class Settings(BaseSettings):
 
     # CORS
     ALLOWED_ORIGINS: list[str] | str = Field(
-        default=["http://localhost:3000", "http://localhost:8080", "http://127.0.0.1:3000"],
+        default=[
+            "http://localhost:3000",
+            "http://localhost:8080",
+            "http://127.0.0.1:3000",
+            "https://chatapp-chatapp.vercel.app",
+        ],
         description="Allowed CORS origins"
     )
 
