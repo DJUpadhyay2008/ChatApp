@@ -32,7 +32,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: false,
       ),
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         color: darkSurface,
         elevation: 0,
       ),
@@ -76,7 +76,7 @@ class AppTheme {
         elevation: 0.5,
         centerTitle: false,
       ),
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         color: lightSurface,
         elevation: 0,
       ),

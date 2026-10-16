@@ -37,6 +37,9 @@ if [ -n "$SUPABASE_ANON_KEY" ]; then
   DART_ARGS="$DART_ARGS --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY"
 fi
 
+echo "Fetching dependencies..."
+$FLUTTER_BIN pub get
+
 echo "Building Flutter Web release bundle..."
 $FLUTTER_BIN build web --release $DART_ARGS -t lib/main.dart
 
