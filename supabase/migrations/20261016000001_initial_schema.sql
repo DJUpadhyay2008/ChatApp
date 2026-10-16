@@ -126,19 +126,29 @@ CREATE POLICY "Users can update their own display_name"
         AND is_admin = (SELECT p.is_admin FROM public.profiles p WHERE p.id = auth.uid())
     );
 
+-- Helper function with SECURITY DEFINER to avoid RLS infinite recursion
+CREATE OR REPLACE FUNCTION public.is_member_of_conversation(conv_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+    SELECT EXISTS (
+        SELECT 1
+        FROM public.conversation_members
+        WHERE conversation_id = conv_id
+          AND user_id = auth.uid()
+    );
+$$;
+
 -- Conversations:
 -- Users can select conversations they belong to
 DROP POLICY IF EXISTS "Users can view conversations they belong to" ON public.conversations;
 CREATE POLICY "Users can view conversations they belong to"
     ON public.conversations FOR SELECT
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.conversation_members cm
-            WHERE cm.conversation_id = id
-            AND cm.user_id = auth.uid()
-        )
-    );
+    USING (public.is_member_of_conversation(id));
 
 -- Conversation Members:
 -- Users can view member lists only for conversations they belong to
@@ -146,13 +156,7 @@ DROP POLICY IF EXISTS "Users can view members of their conversations" ON public.
 CREATE POLICY "Users can view members of their conversations"
     ON public.conversation_members FOR SELECT
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.conversation_members cm
-            WHERE cm.conversation_id = conversation_members.conversation_id
-            AND cm.user_id = auth.uid()
-        )
-    );
+    USING (public.is_member_of_conversation(conversation_id));
 
 -- Direct Conversation Pairs:
 -- Users can view pair mappings they participate in
@@ -168,13 +172,7 @@ DROP POLICY IF EXISTS "Users can view messages in their conversations" ON public
 CREATE POLICY "Users can view messages in their conversations"
     ON public.messages FOR SELECT
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.conversation_members cm
-            WHERE cm.conversation_id = messages.conversation_id
-            AND cm.user_id = auth.uid()
-        )
-    );
+    USING (public.is_member_of_conversation(conversation_id));
 
 -- Users can insert messages ONLY if:
 -- 1. The sender_id is auth.uid() (no impersonation)
@@ -186,11 +184,7 @@ CREATE POLICY "Approved members can insert their own messages"
     TO authenticated
     WITH CHECK (
         sender_id = auth.uid()
-        AND EXISTS (
-            SELECT 1 FROM public.conversation_members cm
-            WHERE cm.conversation_id = messages.conversation_id
-            AND cm.user_id = auth.uid()
-        )
+        AND public.is_member_of_conversation(conversation_id)
         AND EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid()
