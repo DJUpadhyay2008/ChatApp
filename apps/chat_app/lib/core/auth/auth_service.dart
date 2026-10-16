@@ -30,7 +30,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         return;
       }
 
-      await _fetchProfileAndSetState(token);
+      await _fetchProfileAndSetState(token, isRestore: true);
     } catch (_) {
       state = AuthState.unauthenticated();
     }
@@ -77,13 +77,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
         await prefs.setString(_refreshTokenKey, refreshToken);
       }
 
-      await _fetchProfileAndSetState(accessToken);
+      await _fetchProfileAndSetState(accessToken, isRestore: false);
     } catch (e) {
       state = AuthState.error('Network error during login: $e');
     }
   }
 
-  Future<void> _fetchProfileAndSetState(String token) async {
+  Future<void> _fetchProfileAndSetState(String token, {bool isRestore = false}) async {
     try {
       final apiClient = ApiClient(
         baseUrl: Env.apiBaseUrl,
@@ -99,13 +99,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = AuthState.authenticated(profile, token);
       }
     } on ApiException catch (e) {
-      if (e.statusCode == 401) {
+      if (e.statusCode == 401 || isRestore) {
         await signOut();
       } else {
         state = AuthState.error(e.message);
       }
     } catch (e) {
-      state = AuthState.error('Failed to retrieve user status: $e');
+      if (isRestore) {
+        await signOut();
+      } else {
+        state = AuthState.error('Failed to retrieve user status: $e');
+      }
     }
   }
 
