@@ -1,7 +1,6 @@
 {
-  "buildCommand": "flutter/bin/flutter build web --release",
+  "buildCommand": "bash build_web.sh",
   "outputDirectory": "build/web",
-  "installCommand": "if [ ! -d \"flutter\" ]; then git clone https://github.com/flutter/flutter.git -b stable --depth 1; fi && flutter/bin/flutter precache --web",
   "rewrites": [
     {
       "source": "/(.*)",
