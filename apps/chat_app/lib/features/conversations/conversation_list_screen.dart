@@ -13,10 +13,12 @@ class ConversationListScreen extends ConsumerStatefulWidget {
   const ConversationListScreen({super.key});
 
   @override
-  ConsumerState<ConversationListScreen> createState() => _ConversationListScreenState();
+  ConsumerState<ConversationListScreen> createState() =>
+      _ConversationListScreenState();
 }
 
-class _ConversationListScreenState extends ConsumerState<ConversationListScreen> {
+class _ConversationListScreenState
+    extends ConsumerState<ConversationListScreen> {
   final _searchController = TextEditingController();
   bool _isSearching = false;
 
@@ -71,12 +73,16 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 8),
                       child: Row(
                         children: [
                           Text(
                             'Select Member',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
@@ -91,7 +97,8 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
                     const Divider(),
                     Expanded(
                       child: approvedAsync.when(
-                        loading: () => const Center(child: CircularProgressIndicator()),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
                         error: (err, _) => ErrorViewWidget(
                           message: err.toString(),
                           onRetry: () => ref.refresh(approvedUsersProvider),
@@ -109,13 +116,16 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
                               final u = users[index];
                               return ListTile(
                                 leading: InitialsAvatar(name: u.displayName),
-                                title: Text(u.displayName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                title: Text(u.displayName,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
                                 subtitle: const Text('Approved Member'),
                                 onTap: () async {
                                   Navigator.pop(ctx);
                                   try {
                                     final convId = await ref
-                                        .read(conversationNotifierProvider.notifier)
+                                        .read(conversationNotifierProvider
+                                            .notifier)
                                         .createConversation(u.id);
 
                                     if (!context.mounted) return;
@@ -132,7 +142,9 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
                                   } catch (e) {
                                     if (!context.mounted) return;
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Failed to start chat: $e')),
+                                      SnackBar(
+                                          content:
+                                              Text('Failed to start chat: $e')),
                                     );
                                   }
                                 },
@@ -171,7 +183,9 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
                   focusedBorder: InputBorder.none,
                 ),
                 onChanged: (val) {
-                  ref.read(conversationNotifierProvider.notifier).setSearchQuery(val);
+                  ref
+                      .read(conversationNotifierProvider.notifier)
+                      .setSearchQuery(val);
                 },
               )
             : const Text(
@@ -186,7 +200,9 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
                 if (_isSearching) {
                   _isSearching = false;
                   _searchController.clear();
-                  ref.read(conversationNotifierProvider.notifier).setSearchQuery('');
+                  ref
+                      .read(conversationNotifierProvider.notifier)
+                      .setSearchQuery('');
                 } else {
                   _isSearching = true;
                 }
@@ -216,7 +232,8 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
                     if (user?.email != null)
                       Text(
                         user!.email!,
-                        style: TextStyle(fontSize: 12, color: theme.colorScheme.outline),
+                        style: TextStyle(
+                            fontSize: 12, color: theme.colorScheme.outline),
                       ),
                   ],
                 ),
@@ -237,7 +254,8 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () => ref.read(conversationNotifierProvider.notifier).loadConversations(),
+        onRefresh: () =>
+            ref.read(conversationNotifierProvider.notifier).loadConversations(),
         child: _buildBody(state, theme),
       ),
       floatingActionButton: FloatingActionButton(
@@ -256,7 +274,8 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
     if (state.errorMessage != null && state.conversations.isEmpty) {
       return ErrorViewWidget(
         message: state.errorMessage!,
-        onRetry: () => ref.read(conversationNotifierProvider.notifier).loadConversations(),
+        onRetry: () =>
+            ref.read(conversationNotifierProvider.notifier).loadConversations(),
       );
     }
 
@@ -269,7 +288,8 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
       return EmptyStateWidget(
         icon: Icons.forum_outlined,
         title: 'No conversations yet',
-        message: 'Tap the button below to start a private chat with an approved member.',
+        message:
+            'Tap the button below to start a private chat with an approved member.',
         action: FilledButton.icon(
           onPressed: _showNewChatDialog,
           icon: const Icon(Icons.add),
@@ -286,7 +306,8 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
         final formattedTime = _formatTime(conv.lastMessageTime);
 
         return ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           leading: InitialsAvatar(
             name: conv.otherParticipantName,
             radius: 24,
@@ -296,7 +317,8 @@ class _ConversationListScreenState extends ConsumerState<ConversationListScreen>
               Expanded(
                 child: Text(
                   conv.otherParticipantName,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

@@ -44,7 +44,8 @@ class AppTheme {
         filled: true,
         fillColor: darkSurfaceVariant,
         hintStyle: const TextStyle(color: Color(0xFF8696A0)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -88,7 +89,8 @@ class AppTheme {
         filled: true,
         fillColor: const Color(0xFFF0F2F5),
         hintStyle: const TextStyle(color: Color(0xFF667781)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

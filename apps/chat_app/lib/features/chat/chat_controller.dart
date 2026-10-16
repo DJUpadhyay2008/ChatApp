@@ -97,7 +97,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final client = _getApiClient();
-      final data = await client.get('/conversations/$conversationId/messages?limit=30');
+      final data =
+          await client.get('/conversations/$conversationId/messages?limit=30');
 
       final rawList = data['messages'] as List? ?? [];
       final msgs = rawList.map((j) => Message.fromJson(j)).toList();
@@ -116,7 +117,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 
   Future<void> loadOlderMessages() async {
-    if (state.isLoadingMore || !state.hasMore || state.nextCursor == null) return;
+    if (state.isLoadingMore || !state.hasMore || state.nextCursor == null)
+      return;
 
     state = state.copyWith(isLoadingMore: true);
     try {
@@ -146,7 +148,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
 
-    final clientMsgId = '${DateTime.now().millisecondsSinceEpoch}-${Random().nextInt(99999)}';
+    final clientMsgId =
+        '${DateTime.now().millisecondsSinceEpoch}-${Random().nextInt(99999)}';
 
     // Optimistic local message insertion
     final optimisticMessage = Message(
@@ -184,8 +187,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
       state = state.copyWith(messages: updated);
     } catch (e) {
       // Rollback or mark failed
-      final reverted = state.messages.where((m) => m.clientMessageId != clientMsgId).toList();
-      state = state.copyWith(messages: reverted, errorMessage: 'Failed to send: $e');
+      final reverted = state.messages
+          .where((m) => m.clientMessageId != clientMsgId)
+          .toList();
+      state = state.copyWith(
+          messages: reverted, errorMessage: 'Failed to send: $e');
     }
   }
 
@@ -194,7 +200,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final exists = state.messages.any(
       (m) =>
           m.id == message.id ||
-          (message.clientMessageId != null && m.clientMessageId == message.clientMessageId),
+          (message.clientMessageId != null &&
+              m.clientMessageId == message.clientMessageId),
     );
 
     if (!exists) {

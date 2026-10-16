@@ -46,8 +46,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   void _onScroll() {
     // When reversed, maxScrollExtent corresponds to the top of the chat (oldest messages)
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      ref.read(chatNotifierProvider(widget.conversationId).notifier).loadOlderMessages();
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      ref
+          .read(chatNotifierProvider(widget.conversationId).notifier)
+          .loadOlderMessages();
     }
   }
 
@@ -55,7 +58,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final text = _textController.text;
     if (text.trim().isEmpty) return;
 
-    ref.read(chatNotifierProvider(widget.conversationId).notifier).sendMessage(text);
+    ref
+        .read(chatNotifierProvider(widget.conversationId).notifier)
+        .sendMessage(text);
     _textController.clear();
     _focusNode.requestFocus();
   }
@@ -79,7 +84,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 children: [
                   Text(
                     widget.recipientName,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
@@ -108,7 +114,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             if (state.wsStatus != WsStatus.connected)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                 color: Colors.amber.withOpacity(0.2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +123,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     const SizedBox(
                       width: 12,
                       height: 12,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.amber),
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: Colors.amber),
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -163,12 +171,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.lock_outline, size: 36, color: Theme.of(context).colorScheme.outline),
+              Icon(Icons.lock_outline,
+                  size: 36, color: Theme.of(context).colorScheme.outline),
               const SizedBox(height: 12),
               Text(
                 'This is the start of your private conversation with ${widget.recipientName}.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Theme.of(context).colorScheme.outline, fontSize: 13),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.outline, fontSize: 13),
               ),
             ],
           ),
@@ -240,7 +250,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
                 onSubmitted: (_) {
                   _sendMessage();
@@ -256,7 +267,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               shape: BoxShape.circle,
             ),
             child: IconButton(
-              icon: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+              icon:
+                  const Icon(Icons.send_rounded, color: Colors.white, size: 20),
               tooltip: 'Send Message',
               onPressed: _sendMessage,
             ),

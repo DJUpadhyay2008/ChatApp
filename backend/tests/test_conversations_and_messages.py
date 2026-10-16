@@ -95,7 +95,9 @@ def test_send_and_paginate_messages(client, mock_approved_user, monkeypatch):
 
     # Mock membership to True
     monkeypatch.setattr(chat_service, "verify_conversation_membership", lambda cid, uid, tok: True)
-    monkeypatch.setattr(chat_service, "get_conversation_participants", lambda cid, tok: ["user-alice", "user-bob"])
+    monkeypatch.setattr(
+        chat_service, "get_conversation_participants", lambda cid, tok: ["user-alice", "user-bob"]
+    )
 
     # Mock save_message
     saved_msg = MessageResponse(

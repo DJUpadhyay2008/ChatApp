@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.api.deps import get_current_approved_user
@@ -18,7 +17,9 @@ router = APIRouter(prefix="/conversations/{conversation_id}/messages", tags=["Me
 async def get_messages(
     conversation_id: str,
     limit: int = Query(default=30, ge=1, le=100),
-    cursor: str | None = Query(default=None, description="Timestamp ISO string cursor for older messages"),
+    cursor: str | None = Query(
+        default=None, description="Timestamp ISO string cursor for older messages"
+    ),
     approved_user: tuple[UserProfile, str] = Depends(get_current_approved_user),
 ):
     """

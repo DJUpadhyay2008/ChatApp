@@ -7,7 +7,8 @@ import '../network/api_client.dart';
 import '../../shared/models/user_profile.dart';
 import 'auth_state.dart';
 
-final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authNotifierProvider =
+    StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier();
 });
 
@@ -40,7 +41,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = AuthState.loading();
     try {
       // Direct call to Supabase Auth token endpoint
-      final uri = Uri.parse('${Env.supabaseUrl}/auth/v1/token?grant_type=password');
+      final uri =
+          Uri.parse('${Env.supabaseUrl}/auth/v1/token?grant_type=password');
       final response = await http.post(
         uri,
         headers: {
@@ -83,7 +85,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> _fetchProfileAndSetState(String token, {bool isRestore = false}) async {
+  Future<void> _fetchProfileAndSetState(String token,
+      {bool isRestore = false}) async {
     try {
       final apiClient = ApiClient(
         baseUrl: Env.apiBaseUrl,

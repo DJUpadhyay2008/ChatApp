@@ -14,6 +14,7 @@ class ConnectionManager:
     Single-instance in-memory connection routing suitable for 7-8 members on Render free tier.
     Designed with a clean interface that can be backed by Redis Pub/Sub if scaled horizontally.
     """
+
     def __init__(self):
         # Mapping: user_id -> set of active WebSockets (supports multiple tabs / devices)
         self.active_connections: dict[str, set[WebSocket]] = {}
@@ -23,7 +24,11 @@ class ConnectionManager:
         if user_id not in self.active_connections:
             self.active_connections[user_id] = set()
         self.active_connections[user_id].add(websocket)
-        logger.info("WebSocket connected for user %s. Total sessions: %d", user_id, len(self.active_connections[user_id]))
+        logger.info(
+            "WebSocket connected for user %s. Total sessions: %d",
+            user_id,
+            len(self.active_connections[user_id]),
+        )
 
     def disconnect(self, user_id: str, websocket: WebSocket) -> None:
         if user_id in self.active_connections:
@@ -51,7 +56,9 @@ class ConnectionManager:
                 except Exception as e:
                     logger.warning("Error broadcasting to user %s: %s", uid, str(e))
 
-    async def broadcast_new_message(self, participant_ids: list[str], message: MessageResponse) -> None:
+    async def broadcast_new_message(
+        self, participant_ids: list[str], message: MessageResponse
+    ) -> None:
         """
         Broadcasts an authenticated, persisted message to authorized conversation participants.
         """

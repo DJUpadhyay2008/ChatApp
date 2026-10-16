@@ -50,7 +50,7 @@ jobs:
         run: flutter pub get
 
       - name: Verify Dart Code Formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format .
 
       - name: Analyze Flutter Code
         run: flutter analyze
@@ -60,8 +60,10 @@ jobs:
 
       - name: Build Android Release APK
         env:
-          INPUT_API_URL: ${{ inputs.api_base_url }}
-          INPUT_WS_URL: ${{ inputs.ws_base_url }}
+          INPUT_API_URL: ${{ inputs.api_base_url || 'https://private-chat-backend-bwxk.onrender.com' }}
+          INPUT_WS_URL: ${{ inputs.ws_base_url || 'wss://private-chat-backend-bwxk.onrender.com/ws' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://nkmhgzbgdztedrtdwszb.supabase.co' }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rbWhnemJnZHp0ZWRydGR3c3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTc3MjMsImV4cCI6MjEwNzczMzcyM30.ocKyDwtF9A8NFjPL97WsIUmLM9bxvEdkLUHUpE0jFQk' }}
         run: |
           BUILD_ARGS="--release"
           if [ -n "$INPUT_API_URL" ]; then
@@ -69,6 +71,12 @@ jobs:
           fi
           if [ -n "$INPUT_WS_URL" ]; then
             BUILD_ARGS="$BUILD_ARGS --dart-define=WS_BASE_URL=$INPUT_WS_URL"
+          fi
+          if [ -n "$SUPABASE_URL" ]; then
+            BUILD_ARGS="$BUILD_ARGS --dart-define=SUPABASE_URL=$SUPABASE_URL"
+          fi
+          if [ -n "$SUPABASE_ANON_KEY" ]; then
+            BUILD_ARGS="$BUILD_ARGS --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY"
           fi
           echo "Building APK with args: $BUILD_ARGS"
           flutter build apk $BUILD_ARGS

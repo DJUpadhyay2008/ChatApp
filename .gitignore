@@ -44,6 +44,7 @@ apps/chat_app/build/
 apps/chat_app/.dart_tool/
 apps/chat_app/android/.gradle/
 apps/chat_app/android/app/build/
+apps/chat_app/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
 
 # IDE & OS
 .idea/

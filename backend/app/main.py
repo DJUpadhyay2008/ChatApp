@@ -51,7 +51,13 @@ app.add_middleware(
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    logger.error("Unhandled exception processing %s %s: %s", request.method, request.url.path, str(exc), exc_info=True)
+    logger.error(
+        "Unhandled exception processing %s %s: %s",
+        request.method,
+        request.url.path,
+        str(exc),
+        exc_info=True,
+    )
     # Never expose stack traces or internal secrets in response
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

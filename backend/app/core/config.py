@@ -5,20 +5,32 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    ENVIRONMENT: str = Field(default="development", description="development | staging | production")
+    ENVIRONMENT: str = Field(
+        default="development", description="development | staging | production"
+    )
     PORT: int = Field(default=8000, description="Port to listen on")
     HOST: str = Field(default="0.0.0.0", description="Host to bind to")
     LOG_LEVEL: str = Field(default="info", description="Logging level")
 
     # Supabase credentials
-    SUPABASE_URL: str = Field(default="https://placeholder.supabase.co", description="Supabase project URL")
-    SUPABASE_ANON_KEY: str = Field(default="placeholder-anon-key", description="Supabase publishable anon key")
-    SUPABASE_SERVICE_ROLE_KEY: str = Field(default="placeholder-service-role-key", description="Supabase privileged service role key")
+    SUPABASE_URL: str = Field(
+        default="https://placeholder.supabase.co", description="Supabase project URL"
+    )
+    SUPABASE_ANON_KEY: str = Field(
+        default="placeholder-anon-key", description="Supabase publishable anon key"
+    )
+    SUPABASE_SERVICE_ROLE_KEY: str = Field(
+        default="placeholder-service-role-key", description="Supabase privileged service role key"
+    )
 
     # JWT Verification
     SUPABASE_JWT_AUDIENCE: str = Field(default="authenticated", description="JWT audience claim")
-    SUPABASE_JWT_ISSUER: str | None = Field(default=None, description="Optional JWT issuer check (defaults to {SUPABASE_URL}/auth/v1)")
-    SUPABASE_JWT_SECRET: str | None = Field(default=None, description="Optional HMAC secret if using HS256")
+    SUPABASE_JWT_ISSUER: str | None = Field(
+        default=None, description="Optional JWT issuer check (defaults to {SUPABASE_URL}/auth/v1)"
+    )
+    SUPABASE_JWT_SECRET: str | None = Field(
+        default=None, description="Optional HMAC secret if using HS256"
+    )
 
     # CORS
     ALLOWED_ORIGINS: list[str] | str = Field(
@@ -28,17 +40,16 @@ class Settings(BaseSettings):
             "http://127.0.0.1:3000",
             "https://chatapp-chatapp.vercel.app",
         ],
-        description="Allowed CORS origins"
+        description="Allowed CORS origins",
     )
 
     # Admin config
-    ADMIN_EMAIL: str = Field(default="admin@example.com", description="Designated administrator email")
+    ADMIN_EMAIL: str = Field(
+        default="admin@example.com", description="Designated administrator email"
+    )
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=True,
-        extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore"
     )
 
     @field_validator("ALLOWED_ORIGINS", mode="before")

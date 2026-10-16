@@ -56,8 +56,7 @@ class ChatService:
             if u_id != current_user_id:
                 prof = row.get("profiles") or {}
                 other_participants[c_id] = ConversationParticipant(
-                    id=u_id,
-                    display_name=prof.get("display_name", "Member")
+                    id=u_id, display_name=prof.get("display_name", "Member")
                 )
 
         # 4. Fetch the latest message for each conversation
@@ -102,7 +101,9 @@ class ChatService:
         return conversations
 
     @staticmethod
-    def create_or_get_conversation(current_user_id: str, target_user_id: str, jwt_token: str) -> str:
+    def create_or_get_conversation(
+        current_user_id: str, target_user_id: str, jwt_token: str
+    ) -> str:
         """
         Creates or returns an existing 1-on-1 conversation.
         Calls the secure database function create_or_get_direct_conversation.
@@ -113,8 +114,7 @@ class ChatService:
         client = get_user_supabase_client(jwt_token)
         # Call PostgreSQL RPC
         rpc_res = client.rpc(
-            "create_or_get_direct_conversation",
-            {"target_user_id": target_user_id}
+            "create_or_get_direct_conversation", {"target_user_id": target_user_id}
         ).execute()
 
         if rpc_res.data:
@@ -156,7 +156,7 @@ class ChatService:
         user_id: str,
         jwt_token: str,
         limit: int = 30,
-        cursor: str | None = None
+        cursor: str | None = None,
     ) -> MessagePageResponse:
         """
         Cursor-based pagination for messages in a conversation.

@@ -23,7 +23,8 @@ class Message {
       conversationId: json['conversation_id'] ?? '',
       senderId: json['sender_id'] ?? '',
       content: json['content'] ?? '',
-      createdAt: DateTime.tryParse(json['created_at'] ?? '')?.toLocal() ?? DateTime.now(),
+      createdAt: DateTime.tryParse(json['created_at'] ?? '')?.toLocal() ??
+          DateTime.now(),
       clientMessageId: json['client_message_id'],
       isSending: false,
     );

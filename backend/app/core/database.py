@@ -18,8 +18,7 @@ def get_service_supabase_client() -> Client:
     global _service_client
     if _service_client is None:
         _service_client = create_client(
-            supabase_url=settings.SUPABASE_URL,
-            supabase_key=settings.SUPABASE_SERVICE_ROLE_KEY
+            supabase_url=settings.SUPABASE_URL, supabase_key=settings.SUPABASE_SERVICE_ROLE_KEY
         )
     return _service_client
 
@@ -30,8 +29,7 @@ def get_user_supabase_client(user_token: str) -> Client:
     PostgreSQL Row Level Security (RLS) is strictly enforced for all queries made with this client.
     """
     client: Client = create_client(
-        supabase_url=settings.SUPABASE_URL,
-        supabase_key=settings.SUPABASE_ANON_KEY
+        supabase_url=settings.SUPABASE_URL, supabase_key=settings.SUPABASE_ANON_KEY
     )
     # Set the user's JWT on postgrest client
     client.postgrest.auth(user_token)

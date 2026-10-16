@@ -52,7 +52,8 @@ final conversationNotifierProvider =
 class ConversationNotifier extends StateNotifier<ConversationListState> {
   final AuthNotifier _authNotifier;
 
-  ConversationNotifier(this._authNotifier) : super(const ConversationListState()) {
+  ConversationNotifier(this._authNotifier)
+      : super(const ConversationListState()) {
     loadConversations();
   }
 

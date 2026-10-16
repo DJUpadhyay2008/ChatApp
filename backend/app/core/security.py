@@ -24,6 +24,7 @@ class JWKSManager:
     Caches and retrieves public signing keys from Supabase Auth JWKS endpoint.
     Refreshes periodically or on key lookup failure.
     """
+
     def __init__(self, jwks_url: str, cache_ttl_seconds: int = 3600):
         self.jwks_url = jwks_url
         self.cache_ttl_seconds = cache_ttl_seconds
@@ -33,7 +34,11 @@ class JWKSManager:
     async def get_key_for_kid(self, kid: str) -> Any | None:
         current_time = time.time()
         # Fetch if cache expired or kid not found
-        if not self._keys or (current_time - self._last_fetched > self.cache_ttl_seconds) or (kid not in self._keys):
+        if (
+            not self._keys
+            or (current_time - self._last_fetched > self.cache_ttl_seconds)
+            or (kid not in self._keys)
+        ):
             await self.refresh_keys()
         return self._keys.get(kid)
 

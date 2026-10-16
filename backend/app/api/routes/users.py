@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends
 
 from app.api.deps import get_current_approved_user, get_current_user_claims
@@ -11,9 +10,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/me", response_model=AuthStatusResponse)
-async def get_my_status(
-    auth_data: tuple[UserClaims, str] = Depends(get_current_user_claims)
-):
+async def get_my_status(auth_data: tuple[UserClaims, str] = Depends(get_current_user_claims)):
     """
     Returns current user's profile and approval status.
     Allows unapproved users to verify whether their account is pending approval.
@@ -40,7 +37,7 @@ async def get_my_status(
 
 @router.get("", response_model=list[UserSummary])
 async def list_approved_members(
-    approved_user: tuple[UserProfile, str] = Depends(get_current_approved_user)
+    approved_user: tuple[UserProfile, str] = Depends(get_current_approved_user),
 ):
     """
     Lists all other approved members for initiating private 1-on-1 conversations.

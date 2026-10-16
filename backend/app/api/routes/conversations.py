@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.api.deps import get_current_approved_user
@@ -11,7 +10,7 @@ router = APIRouter(prefix="/conversations", tags=["Conversations"])
 
 @router.get("", response_model=list[ConversationResponse])
 async def get_conversations(
-    approved_user: tuple[UserProfile, str] = Depends(get_current_approved_user)
+    approved_user: tuple[UserProfile, str] = Depends(get_current_approved_user),
 ):
     """
     Returns all 1-to-1 conversations for the authenticated approved user.
@@ -22,14 +21,14 @@ async def get_conversations(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to fetch conversations: {e!s}"
+            detail=f"Failed to fetch conversations: {e!s}",
         )
 
 
 @router.post("", response_model=dict)
 async def create_conversation(
     req: ConversationCreateRequest,
-    approved_user: tuple[UserProfile, str] = Depends(get_current_approved_user)
+    approved_user: tuple[UserProfile, str] = Depends(get_current_approved_user),
 ):
     """
     Creates or retrieves an existing 1-to-1 conversation with the target approved user.

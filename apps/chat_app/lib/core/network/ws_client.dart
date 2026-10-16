@@ -33,7 +33,9 @@ class WsClient {
   }
 
   Future<void> connect() async {
-    if (_isDisposed || _status == WsStatus.connected || _status == WsStatus.connecting) {
+    if (_isDisposed ||
+        _status == WsStatus.connected ||
+        _status == WsStatus.connecting) {
       return;
     }
 

@@ -94,7 +94,11 @@ def test_admin_approval_endpoint_protection(client, monkeypatch):
         return regular_profile
 
     monkeypatch.setattr(auth_service, "get_user_profile", mock_profile)
-    monkeypatch.setattr(auth_service, "set_user_approval", lambda target_user_id, approve: {"id": target_user_id, "is_approved": approve})
+    monkeypatch.setattr(
+        auth_service,
+        "set_user_approval",
+        lambda target_user_id, approve: {"id": target_user_id, "is_approved": approve},
+    )
 
     # Non-admin attempting to approve another user must get 403 Forbidden
     resp = client.post(
