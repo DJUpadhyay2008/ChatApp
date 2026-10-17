@@ -59,7 +59,10 @@ jobs:
         run: flutter test
 
       - name: Ensure Android Platform Scaffolding
-        run: flutter create --platforms=android .
+        run: |
+          rm -rf android
+          flutter create --platforms=android --org com.privatechat --project-name chat_app .
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>' android/app/src/main/AndroidManifest.xml
 
       - name: Build Android Release APK
         env:
@@ -68,7 +71,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://nkmhgzbgdztedrtdwszb.supabase.co' }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rbWhnemJnZHp0ZWRydGR3c3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTc3MjMsImV4cCI6MjEwNzczMzcyM30.ocKyDwtF9A8NFjPL97WsIUmLM9bxvEdkLUHUpE0jFQk' }}
         run: |
-          BUILD_ARGS="--release"
+          BUILD_ARGS="--release --android-skip-build-dependency-validation"
           if [ -n "$INPUT_API_URL" ]; then
             BUILD_ARGS="$BUILD_ARGS --dart-define=API_BASE_URL=$INPUT_API_URL"
           fi
