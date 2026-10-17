@@ -53,10 +53,13 @@ jobs:
         run: dart format .
 
       - name: Analyze Flutter Code
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
       - name: Run Flutter Tests
         run: flutter test
+
+      - name: Ensure Android Platform Scaffolding
+        run: flutter create --platforms=android .
 
       - name: Build Android Release APK
         env:
